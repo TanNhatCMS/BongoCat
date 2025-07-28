@@ -4,7 +4,8 @@ import { error } from '@tauri-apps/plugin-log'
 import { openUrl } from '@tauri-apps/plugin-opener'
 import { useEventListener } from '@vueuse/core'
 import { ConfigProvider, theme } from 'ant-design-vue'
-import zhCN from 'ant-design-vue/es/locale/zh_CN'
+// import zhCN from 'ant-design-vue/es/locale/zh_CN'
+import viVN from 'ant-design-vue/es/locale/vi_VN'
 import { isString } from 'es-toolkit'
 import isURL from 'is-url'
 import { onMounted } from 'vue'
@@ -35,6 +36,7 @@ onMounted(async () => {
   generateColorVars()
 
   await appStore.$tauri.start()
+  await appStore.init()
   await modelStore.$tauri.start()
   await modelStore.init()
   await catStore.$tauri.start()
@@ -81,7 +83,7 @@ useEventListener('click', (event) => {
 
 <template>
   <ConfigProvider
-    :locale="zhCN"
+    :locale="viVN"
     :theme="{
       algorithm: generalStore.isDark ? darkAlgorithm : defaultAlgorithm,
     }"

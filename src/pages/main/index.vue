@@ -52,7 +52,7 @@ useEventListener('resize', () => {
 watch(() => modelStore.currentModel, async (model) => {
   if (!model) return
 
-  handleLoad()
+  await handleLoad()
 
   const path = join(model.path, 'resources', 'background.png')
 
@@ -78,15 +78,15 @@ watch(() => modelStore.currentModel, async (model) => {
   }
 }, { deep: true, immediate: true })
 
-watch([() => catStore.scale, modelSize], async () => {
-  if (!modelSize.value) return
+watch([() => catStore.scale, modelSize], async ([scale, modelSize]) => {
+  if (!modelSize) return
 
-  const { width, height } = modelSize.value
+  const { width, height } = modelSize
 
-  appWindow.setSize(
+  await appWindow.setSize(
     new PhysicalSize({
-      width: Math.round(width * (catStore.scale / 100)),
-      height: Math.round(height * (catStore.scale / 100)),
+      width: Math.round(width * (scale / 100)),
+      height: Math.round(height * (scale / 100)),
     }),
   )
 }, { immediate: true })
@@ -128,7 +128,7 @@ async function handleContextmenu(event: MouseEvent) {
     items: await getSharedMenu(),
   })
 
-  menu.popup()
+  await menu.popup()
 }
 
 function handleMouseMove(event: MouseEvent) {
@@ -154,6 +154,8 @@ function handleMouseMove(event: MouseEvent) {
   >
     <img
       v-if="backgroundImagePath"
+      class="object-cover"
+      alt=""
       :src="backgroundImagePath"
     >
 
@@ -162,6 +164,8 @@ function handleMouseMove(event: MouseEvent) {
     <img
       v-for="path in modelStore.pressedKeys"
       :key="path"
+      class="object-cover"
+      alt=""
       :src="convertFileSrc(path)"
     >
 
@@ -170,7 +174,8 @@ function handleMouseMove(event: MouseEvent) {
       class="flex items-center justify-center bg-black"
     >
       <span class="text-center text-5xl text-white">
-        重绘中...
+        <!--     Re-drawing   重绘中... -->
+        Vẽ lại...
       </span>
     </div>
   </div>
